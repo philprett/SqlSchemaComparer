@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,9 +16,31 @@ namespace SqlSchemaComparer.Forms
 {
     public partial class FormMain : Form
     {
+        bool ignoreComments;
+        bool ignoreGo;
+        bool caseSensitive;
+        bool showIdentical;
+        bool includeDropActions;
+
+        DatabaseConnection dbSelected1;
+        DatabaseConnection dbSelected2;
+        string winMerge;
+
         public FormMain()
         {
             InitializeComponent();
+
+            AppDataContext.DB.InitialValues();
+            ignoreComments = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "ignorecomments").Value == "1";
+            ignoreGo = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "ignorego").Value == "1";
+            caseSensitive = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "casesensitive").Value == "1";
+            showIdentical = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "showidentical").Value == "1";
+            includeDropActions = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "includedropactions").Value == "1";
+
+            if (File.Exists(@"C:\Program Files (x86)\WinMerge\WinMergeU.exe"))
+                winMerge = @"C:\Program Files (x86)\WinMerge\WinMergeU.exe";
+            else
+                winMerge = string.Empty;
         }
 
         private void databasesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -113,8 +137,8 @@ namespace SqlSchemaComparer.Forms
             if (db1 == null) { db1 = new SavedValue { Name = "database1" }; AppDataContext.DB.SavedValues.Add(db1); }
             if (db2 == null) { db2 = new SavedValue { Name = "database2" }; AppDataContext.DB.SavedValues.Add(db2); }
 
-            DatabaseConnection dbSelected1 = (DatabaseConnection)cmbDatabase1.SelectedItem;
-            DatabaseConnection dbSelected2 = (DatabaseConnection)cmbDatabase2.SelectedItem;
+            dbSelected1 = (DatabaseConnection)cmbDatabase1.SelectedItem;
+            dbSelected2 = (DatabaseConnection)cmbDatabase2.SelectedItem;
 
             db1.Value = dbSelected1 == null ? "" : dbSelected1.Id.ToString();
             db2.Value = dbSelected2 == null ? "" : dbSelected2.Id.ToString();
@@ -123,10 +147,21 @@ namespace SqlSchemaComparer.Forms
 
         private void compareToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            DatabaseConnection dbSelected1 = (DatabaseConnection)cmbDatabase1.SelectedItem;
-            DatabaseConnection dbSelected2 = (DatabaseConnection)cmbDatabase2.SelectedItem;
+            dbSelected1 = (DatabaseConnection)cmbDatabase1.SelectedItem;
+            dbSelected2 = (DatabaseConnection)cmbDatabase2.SelectedItem;
 
             if (dbSelected1 == null || dbSelected2 == null) return;
+
+            Cursor = Cursors.WaitCursor;
+            menuStrip1.Enabled = false;
+            cmbDatabase1.Enabled = false;
+            cmbDatabase2.Enabled = false;
+            Grid.Enabled = false;
+            Application.DoEvents();
+
+            Object1.HeaderText = dbSelected1.Name;
+            Object2.HeaderText = dbSelected2.Name;
+            Application.DoEvents();
 
             DatabaseSource database1 = new DatabaseSource(dbSelected1);
             database1.DatabaseObjectScanProgress += new DatabaseSource.DatabaseObjectScanProgressHandler(Database1ScanProgressMade);
@@ -137,6 +172,12 @@ namespace SqlSchemaComparer.Forms
             database2.GetDatabaseObjects();
 
             Compare(database1, database2);
+
+            menuStrip1.Enabled = true;
+            cmbDatabase1.Enabled = true;
+            cmbDatabase2.Enabled = true;
+            Grid.Enabled = true;
+            Cursor = Cursors.Default;
         }
 
         private void Database1ScanProgressMade(object sender, DatabaseSource.ScanProgressEventArgs e)
@@ -152,18 +193,22 @@ namespace SqlSchemaComparer.Forms
 
         private void Compare(DatabaseSource database1, DatabaseSource database2)
         {
-            toolStripStatusLabel.Text = string.Format("Comparing...");
+            Grid.Rows.Clear();
+            toolStripStatusLabel.Text = string.Format("Comparing objects...");
             Application.DoEvents();
 
-            foreach (DatabaseObject obj2 in database2.DatabaseObjects.OrderBy(o => o.Name))
+            if (includeDropActions)
             {
-                DatabaseObject obj1 = database2.DatabaseObjects.FirstOrDefault(o => o.Name == obj2.Name);
-                if (obj1 == null)
+                foreach (DatabaseObject obj2 in database2.DatabaseObjects)
                 {
-                    AddGridRow(obj1, obj2);
+                    DatabaseObject obj1 = database1.DatabaseObjects.FirstOrDefault(o => o.Name == obj2.Name);
+                    if (obj1 == null)
+                    {
+                        AddGridRow(obj1, obj2);
+                    }
                 }
             }
-            foreach (DatabaseObject obj1 in database1.DatabaseObjects.OrderBy(o => o.Name))
+            foreach (DatabaseObject obj1 in database1.DatabaseObjects)
             {
                 DatabaseObject obj2 = database2.DatabaseObjects.FirstOrDefault(o => o.Name == obj1.Name);
                 AddGridRow(obj1, obj2);
@@ -171,6 +216,7 @@ namespace SqlSchemaComparer.Forms
 
             toolStripStatusLabel.Text = string.Format("Finished");
             Application.DoEvents();
+
         }
 
         private void AddGridRow(DatabaseObject obj1, DatabaseObject obj2)
@@ -183,8 +229,8 @@ namespace SqlSchemaComparer.Forms
             cell1.Tag = obj1;
             cell2.Tag = obj2;
 
-            cell1.Value = obj1 == null ? "" : obj1.Name;
-            cell2.Value = obj2 == null ? "" : obj2.Name;
+            cell1.Value = obj1 == null ? "" : string.Format("{0}.{1}", obj1.Schema, obj1.Name);
+            cell2.Value = obj2 == null ? "" : string.Format("{0}.{1}", obj2.Schema, obj2.Name);
 
             if (obj1 == null)
             {
@@ -196,7 +242,7 @@ namespace SqlSchemaComparer.Forms
                 {
                     cellStatus.Value = "CREATE " + obj1.ObjectTypeNice;
                 }
-                else if (obj1.CreateSQL.ReduceWhiteSpace().ToString() != obj2.CreateSQL.ReduceWhiteSpace().ToString())
+                else if (!obj1.CreateSQL.FunctionallyEquals(obj2.CreateSQL, ignoreComments, ignoreGo, caseSensitive))
                 {
                     cellStatus.Value = "ALTER " + obj1.ObjectTypeNice;
                 }
@@ -208,7 +254,129 @@ namespace SqlSchemaComparer.Forms
             row.Cells.Add(cell1);
             row.Cells.Add(cellStatus);
             row.Cells.Add(cell2);
-            Grid.Rows.Add(row);
+            if (showIdentical || !string.IsNullOrWhiteSpace(cellStatus.Value.ToString()))
+            {
+                Grid.Rows.Add(row);
+            }
+        }
+
+        private void Grid_DoubleClick(object sender, EventArgs e)
+        {
+            if (Grid.SelectedRows.Count != 1) return;
+
+            DatabaseObject obj1 = (DatabaseObject)Grid.SelectedRows[0].Cells[0].Tag;
+            DatabaseObject obj2 = (DatabaseObject)Grid.SelectedRows[0].Cells[2].Tag;
+
+            string file1;
+            string file2;
+            if (obj1 != null && !string.IsNullOrWhiteSpace(obj1.Filename))
+            {
+                file1 = obj1.Filename;
+            }
+            else
+            {
+                file1 = Path.GetTempFileName();
+                File.Delete(file1);
+                file1 += ".sql";
+                File.WriteAllText(file1, obj1 != null ? obj1.CreateSQL.ToString() : "");
+            }
+            if (obj2 != null && !string.IsNullOrWhiteSpace(obj2.Filename))
+            {
+                file2 = obj2.Filename;
+            }
+            else
+            {
+                file2 = Path.GetTempFileName();
+                File.Delete(file2);
+                file2 += ".sql";
+                File.WriteAllText(file2, obj2 != null ? obj2.CreateSQL.ToString() : "");
+            }
+
+            ProcessStartInfo proc = new ProcessStartInfo(
+                winMerge,
+                string.Format("\"{0}\" \"{1}\"", file1, file2)
+                );
+            Process.Start(proc);
+        }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FormOptions f = new FormOptions();
+            f.ShowDialog();
+            ignoreComments = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "ignorecomments").Value == "1";
+            ignoreGo = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "ignorego").Value == "1";
+            caseSensitive = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "casesensitive").Value == "1";
+            showIdentical = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "showidentical").Value == "1";
+            includeDropActions = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "includedropactions").Value == "1";
+
+        }
+
+        private void createScriptForAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            createScript(true);
+        }
+
+        private void createScriptForSelectedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            createScript(false);
+        }
+
+        private void createScript(bool all)
+        {
+            StringBuilder script = new StringBuilder();
+            script.Append(string.Format("------------------------------------------------------------\r\n"));
+            script.Append(string.Format("-- Deploy script for {0}\r\n", dbSelected2.Server));
+            script.Append(string.Format("------------------------------------------------------------\r\n\r\n"));
+            script.Append(string.Format("USE {0}\r\nGO\r\n\r\n", dbSelected2.Database));
+
+            List<DataGridViewRow> rows = new List<DataGridViewRow>();
+            if (all)
+                foreach (DataGridViewRow r in Grid.Rows) rows.Add(r);
+            else
+                foreach (DataGridViewRow r in Grid.SelectedRows) rows.Add(r);
+
+            foreach (DataGridViewRow row in rows)
+            {
+                DatabaseObject obj1 = (DatabaseObject)row.Cells[0].Tag;
+                string action = (string)row.Cells[1].Value;
+                DatabaseObject obj2 = (DatabaseObject)row.Cells[2].Tag;
+                if (action.StartsWith("CREATE", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    script.Append(obj1.CreateSQL);
+                    if (!obj1.CreateSQL.Str.Trim().EndsWith("GO", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (!obj1.CreateSQL.Str.EndsWith("\n"))
+                        {
+                            script.Append("\r\n");
+                        }
+                        script.Append("GO\r\n");
+                    }
+                }
+                else if (action.StartsWith("ALTER", StringComparison.CurrentCultureIgnoreCase) && obj1.ObjectType != "U")
+                {
+                    string alterSql = obj1.CreateSQL.ChangeCreateToAlter().Str;
+                    script.Append(alterSql);
+                    if (!obj1.CreateSQL.Str.EndsWith("\n"))
+                    {
+                        script.Append("\r\n");
+                    }
+                    script.Append("GO\r\n");
+                }
+                else if (action.StartsWith("DROP", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    string alterSql = obj1.CreateSQL.ChangeCreateToAlter().Str;
+                    script.Append(alterSql);
+                    if (!obj1.CreateSQL.Str.EndsWith("\n"))
+                    {
+                        script.Append("\r\n");
+                    }
+                    script.Append(string.Format("{0} {1}.{2}\r\nGO\r\n", action, obj2.Schema, obj2.Name));
+                }
+            }
+
+            FormViewScript f = new FormViewScript();
+            f.Script = script.ToString();
+            f.ShowDialog();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,5 +57,34 @@ namespace SqlSchemaComparer.AppData
 
         public bool IsSqlServer { get { return !IsFolder; } }
         public bool IsFolder { get { return Server.Contains(":") || Server.Contains("\\\\"); } }
+
+        public string ConnectionString
+        {
+            get
+            {
+                if (IsFolder)
+                {
+                    return Server;
+                }
+                else if (IsSqlServer)
+                {
+                    SqlConnectionStringBuilder cs = new SqlConnectionStringBuilder();
+                    cs.DataSource = Server;
+                    cs.IntegratedSecurity = string.IsNullOrWhiteSpace(Username);
+                    if (!cs.IntegratedSecurity)
+                    {
+                        cs.UserID = Username;
+                        cs.Password = Password;
+                    }
+                    cs.InitialCatalog = Database;
+
+                    return cs.ConnectionString;
+                }
+                else
+                {
+                    return Server;
+                }
+            }
+        }
     }
 }

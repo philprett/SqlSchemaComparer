@@ -31,6 +31,7 @@ namespace SqlSchemaComparer.DatabaseObjects
                     DatabaseObjectScanProgress(this, new ScanProgressEventArgs() { Message = string.Format("Scanning {0} on {1}...", ConnectionDetails.Database, ConnectionDetails.Server) });
 
                 DatabaseSqlServer databaseSqlServer = new DatabaseSqlServer(ConnectionDetails);
+                databaseSqlServer.ProgressMade += new DatabaseSqlServer.ProgressMadeHandler(SqlServerProgressMade);
                 DatabaseObjects = databaseSqlServer.GetDatabaseObjects();
 
                 if (DatabaseObjectScanProgress != null)
@@ -53,6 +54,25 @@ namespace SqlSchemaComparer.DatabaseObjects
             {
                 DatabaseObjects = new List<DatabaseObject>();
             }
+
+            DatabaseObjectScanProgress(this, new ScanProgressEventArgs() { Message = string.Format("Checking dependancies...") });
+            DatabaseObjects = DatabaseObjects.OrderBy(o => o.Name).OrderBy(o => o.ObjectTypeSort).ToList();
+
+            // Now sort the objects in the order of dependance
+            for (int a = 0; a < DatabaseObjects.Count - 1; a++)
+            {
+                for (int b = a + 1; b < DatabaseObjects.Count - 1; b++)
+                {
+                    if (DatabaseObjects[b].CreateSQL.DependsOn(DatabaseObjects[b + 1].Name))
+                    {
+                        DatabaseObject t = DatabaseObjects[b];
+                        DatabaseObjects[b] = DatabaseObjects[b+1];
+                        DatabaseObjects[b+1] = t;
+                    }
+                }
+            }
+
+            DatabaseObjectScanProgress(this, new ScanProgressEventArgs() { Message = string.Format("Dependancies checked") });
         }
 
         public void ScanFolderStarted(object sender, DatabaseFolder.ScanFolderEventArgs e)
@@ -68,6 +88,10 @@ namespace SqlSchemaComparer.DatabaseObjects
             {
                 //DatabaseObjectScanProgress(this, new ScanProgressEventArgs() { Message = string.Format("Scanning file {0}...", e.File) });
             }
+        }
+        public void SqlServerProgressMade(object sender, DatabaseSqlServer.ProgressEventArgs e)
+        {
+            DatabaseObjectScanProgress(this, new ScanProgressEventArgs() { Message = e.Message });
         }
     }
 }

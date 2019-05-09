@@ -117,50 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="database_connect" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\database_connect.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="database" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\database.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="database_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\database_refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="database_edit" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\database_edit.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="door_in" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\door_in.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cancel" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\cancel.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="disk" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\disk.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="database_add" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\database_add.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="database_gear" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\database_gear.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="database_delete" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\database_delete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="cog" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\cog.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="arrow_refresh" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\arrow_refresh.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="script" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\script.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="script_go" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\script_go.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="script_save" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Icons\script_save.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <metadata name="menuStrip1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAD///8A////AP///wD///8A////AP///wD///8A////AChuLQMlaSmq////AP///wD///8A////AP//
+        /wD///8A////AP///wD///8A////AJmZmQ2VlZUxkZGRL4yMjActdTPAKW8u0v///wD///8A////AP//
+        /wD///8A////AP///wCjo6MhoaGhnZ+fn/ChoaH/q6ur/6enp/9SiFb/Vp1e/1OZWv8qcS//Jmsr/yNm
+        J/8gYiPAHV4gQP///wCnp6dKpaWl9M7Ozv/t7e3/9PT0//X19f9Rmln/YKdo/43Nl/+Ky5T/h8qR/4TJ
+        jv+ByIz/YKdo/yBjJMwdXyFAqamp6t7e3v/z8/P/29vb/9LS0v/b29v/1tbW/2Sgav9iqWr/XaRl/zWA
+        O/8xejb/UZdY/4LIjf9boWP/IWQlmaysrOrw8PD/3t7e/9TU1P/S0tL/29vb/9HU0v++v77/X5tk/1SV
+        Wv/e3t7/kJCQ6jJ7OMItdTP/KW8u/yVqKuCurq7q8vLy/+Li4v/Y2Nj/1dXV/9zc3P/Y2Nj/wMDA/7Oz
+        s/9roXD/4ODg/5aWlur///8A////AP///wD///8AsLCw6vPz8//n5+f/3d3d/9nZ2f/g4OD/29vb/8TE
+        xP+3uLf/u7u7/+Hh4f9dlWP4PYxFA////wD///8A////ALKysur09PT/6urq/+Hh4f/d3d3/ccJ6/124
+        aP9as2T/b7F1/7+/v//i4uL/Vptd+0OUS8I/jUYCOodBCf///wC0tLTq9fX1/+7u7v/m5ub/4uLi/5nQ
+        n/+Oz5f/qtmx/3rDg/9Xr2H/Uqlc/2+3eP9rs3T/RZVMu////wD///8AtbW16vb29v/i4uL/zc3N/8TE
+        xP+zyrb/ecSD/5TSnP+r2rL/qNmv/6XYrf+i1qr/n9Wn/2y0dP9Gl07c////ALe3t+r39/f/0NDQ/9zc
+        3P/o6Oj/+fn5/9Ts1/+GzY//Y8Bv/2C8a/9dt2f/ecKC/3W+fv9Qplm5////AP///wC5ubnq+Pj4//7+
+        /v/////////////////////////////////7+/v/6urq/2m1cvtas2TA////AP///wD///8Aurq6v+Hh
+        4f/+/v7/////////////////////////////////+/v7/8/Pz/9zuXvgXrlpA////wD///8A////ALy8
+        vCq7u7vR0NDQ/+jo6P/z8/P//f39//z8/P/t7e3/4ODg/8LCwv+tra3DrKysG////wD///8A////AP//
+        /wD///8AvLy8B7u7u1W6urquuLi41re3t/u2trb5tLS0zbOzs6mxsbFGr6+vA////wD///8A////AP//
+        /wD///8A/z8AAPA/AACAAQAAAAAAAAAAAAAAAAAAAA8AAAAHAAAAAQAAAAMAAAABAAAAAwAAAAcAAAAH
+        AAAADwAAgB8AAA==
+</value>
   </data>
 </root>

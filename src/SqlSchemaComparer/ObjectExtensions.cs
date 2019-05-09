@@ -10,9 +10,7 @@ namespace SqlSchemaComparer
     {
         public static void SetRandom(this long longValue)
         {
-            var random = new Random();
-            longValue = (long)random.Next() << 32;
-            longValue = longValue | (long)random.Next();
+            longValue = Utils.GetRandomLong();
         }
     }
 }

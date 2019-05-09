@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SqlSchemaComparer;
 
 namespace SqlSchemaComparer.AppData
 {
@@ -103,5 +106,29 @@ namespace SqlSchemaComparer.AppData
         public DbSet<DatabaseConnection> DatabaseConnections { get; set; }
         public DbSet<SavedValue> SavedValues { get; set; }
 
+        public void InitialValues()
+        {
+            if (SavedValues.FirstOrDefault(v => v.Name == "ignorecomments") == null)
+            {
+                SavedValues.Add(new SavedValue() { Id = Utils.GetRandomLong(), Name = "ignorecomments", Value = "0" });
+            }
+            if (SavedValues.FirstOrDefault(v => v.Name == "ignorego") == null)
+            {
+                SavedValues.Add(new SavedValue() { Id = Utils.GetRandomLong(), Name = "ignorego", Value = "0" });
+            }
+            if (SavedValues.FirstOrDefault(v => v.Name == "casesensitive") == null)
+            {
+                SavedValues.Add(new SavedValue() { Id = Utils.GetRandomLong(), Name = "casesensitive", Value = "1" });
+            }
+            if (SavedValues.FirstOrDefault(v => v.Name == "showidentical") == null)
+            {
+                SavedValues.Add(new SavedValue() { Id = Utils.GetRandomLong(), Name = "showidentical", Value = "0" });
+            }
+            if (SavedValues.FirstOrDefault(v => v.Name == "includedropactions") == null)
+            {
+                SavedValues.Add(new SavedValue() { Id = Utils.GetRandomLong(), Name = "includedropactions", Value = "1" });
+            }
+            SaveChanges();
+        }
     }
 }

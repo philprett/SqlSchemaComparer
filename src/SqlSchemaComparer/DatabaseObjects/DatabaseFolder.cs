@@ -44,13 +44,22 @@ namespace SqlSchemaComparer.DatabaseObjects
             foreach (FileInfo file in dir.GetFiles("*.sql"))
             {
                 if (!file.Name.EndsWith(".sql")) continue;
+
                 if (ScanFileStarted != null) ScanFileStarted(this, new ScanFileEventArgs() { File = file.FullName });
 
                 DatabaseFile databaseFile = new DatabaseFile(file.FullName);
+
+                string objectName = databaseFile.Contents.GetNameFromCreateSQL();
+                if (string.IsNullOrWhiteSpace(objectName)) objectName = file.Name.Substring(0, file.Name.LastIndexOf("."));
+
+                string objectSchema = objectName.Contains(".") ? objectName.Substring(0, objectName.IndexOf(".")) : string.Empty;
+                objectName = objectName.Contains(".") ? objectName.Substring(objectName.IndexOf(".") + 1) : objectName;
+
                 DatabaseObject databaseObject = new DatabaseObject
                 {
-                    Schema = string.Empty,
-                    Name = file.Name,
+                    Filename = file.FullName,
+                    Schema = objectSchema,
+                    Name = objectName,
                     ObjectType = databaseFile.ObjectType,
                     CreateSQL = databaseFile.Contents
                 };
