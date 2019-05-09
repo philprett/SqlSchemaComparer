@@ -69,5 +69,11 @@ namespace SqlSchemaComparer.Forms
             txtScript.SelectionStart = 0;
             txtScript.SelectionLength = 0;
         }
+
+        private void copyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText(txtScript.Text);
+            Close();
+        }
     }
 }

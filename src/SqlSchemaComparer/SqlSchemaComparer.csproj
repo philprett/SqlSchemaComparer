@@ -152,6 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="database_refresh.ico" />
+    <None Include="Icons\page_copy.png" />
     <None Include="Icons\script_save.png" />
     <None Include="Icons\script_go.png" />
     <None Include="Icons\script.png" />
