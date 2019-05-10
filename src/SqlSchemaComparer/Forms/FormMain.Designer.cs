@@ -31,22 +31,22 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cmbDatabase2 = new System.Windows.Forms.ComboBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.cmbDatabase1 = new System.Windows.Forms.ComboBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.databasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createScriptForSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createScriptForAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.Grid = new System.Windows.Forms.DataGridView();
             this.Object1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ObjectStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Object2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.createScriptForAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.databasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createScriptForSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -81,6 +81,17 @@
             this.cmbDatabase2.TabIndex = 3;
             this.cmbDatabase2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cmbDatabase2_DrawItem);
             // 
+            // label2
+            // 
+            this.label2.Image = global::SqlSchemaComparer.Properties.Resources.database;
+            this.label2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label2.Location = new System.Drawing.Point(6, 47);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(80, 16);
+            this.label2.TabIndex = 2;
+            this.label2.Text = "      Database 2";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // cmbDatabase1
             // 
             this.cmbDatabase1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -94,6 +105,17 @@
             this.cmbDatabase1.TabIndex = 1;
             this.cmbDatabase1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cmbDatabase1_DrawItem);
             // 
+            // label1
+            // 
+            this.label1.Image = global::SqlSchemaComparer.Properties.Resources.database;
+            this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.label1.Location = new System.Drawing.Point(6, 20);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(80, 16);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "      Database 1";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -101,13 +123,64 @@
             this.optionsToolStripMenuItem,
             this.databasesToolStripMenuItem,
             this.compareToolStripMenuItem,
-            this.createScriptForSelectedToolStripMenuItem,
-            this.createScriptForAllToolStripMenuItem});
+            this.createScriptForAllToolStripMenuItem,
+            this.createScriptForSelectedToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(967, 24);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
+            // 
+            // exitToolStripMenuItem
+            // 
+            this.exitToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.exitToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.door_in;
+            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
+            this.exitToolStripMenuItem.Text = "E&xit";
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            // 
+            // optionsToolStripMenuItem
+            // 
+            this.optionsToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.optionsToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.cog;
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
+            this.optionsToolStripMenuItem.Text = "Options";
+            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
+            // 
+            // databasesToolStripMenuItem
+            // 
+            this.databasesToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.databasesToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.database_gear;
+            this.databasesToolStripMenuItem.Name = "databasesToolStripMenuItem";
+            this.databasesToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+            this.databasesToolStripMenuItem.Text = "Databases";
+            this.databasesToolStripMenuItem.Click += new System.EventHandler(this.databasesToolStripMenuItem_Click);
+            // 
+            // compareToolStripMenuItem
+            // 
+            this.compareToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.arrow_refresh;
+            this.compareToolStripMenuItem.Name = "compareToolStripMenuItem";
+            this.compareToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
+            this.compareToolStripMenuItem.Text = "&Compare";
+            this.compareToolStripMenuItem.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
+            // 
+            // createScriptForSelectedToolStripMenuItem
+            // 
+            this.createScriptForSelectedToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.script;
+            this.createScriptForSelectedToolStripMenuItem.Name = "createScriptForSelectedToolStripMenuItem";
+            this.createScriptForSelectedToolStripMenuItem.Size = new System.Drawing.Size(165, 20);
+            this.createScriptForSelectedToolStripMenuItem.Text = "Create script for selected";
+            this.createScriptForSelectedToolStripMenuItem.Click += new System.EventHandler(this.createScriptForSelectedToolStripMenuItem_Click);
+            // 
+            // createScriptForAllToolStripMenuItem
+            // 
+            this.createScriptForAllToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.script;
+            this.createScriptForAllToolStripMenuItem.Name = "createScriptForAllToolStripMenuItem";
+            this.createScriptForAllToolStripMenuItem.Size = new System.Drawing.Size(134, 20);
+            this.createScriptForAllToolStripMenuItem.Text = "Create script for all";
+            this.createScriptForAllToolStripMenuItem.Click += new System.EventHandler(this.createScriptForAllToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -167,79 +240,6 @@
             this.Object2.HeaderText = "Database 2";
             this.Object2.Name = "Object2";
             this.Object2.ReadOnly = true;
-            // 
-            // createScriptForAllToolStripMenuItem
-            // 
-            this.createScriptForAllToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.script;
-            this.createScriptForAllToolStripMenuItem.Name = "createScriptForAllToolStripMenuItem";
-            this.createScriptForAllToolStripMenuItem.Size = new System.Drawing.Size(134, 20);
-            this.createScriptForAllToolStripMenuItem.Text = "Create script for all";
-            this.createScriptForAllToolStripMenuItem.Click += new System.EventHandler(this.createScriptForAllToolStripMenuItem_Click);
-            // 
-            // label2
-            // 
-            this.label2.Image = global::SqlSchemaComparer.Properties.Resources.database;
-            this.label2.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label2.Location = new System.Drawing.Point(6, 47);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 16);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "      Database 2";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // label1
-            // 
-            this.label1.Image = global::SqlSchemaComparer.Properties.Resources.database;
-            this.label1.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.label1.Location = new System.Drawing.Point(6, 20);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(80, 16);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "      Database 1";
-            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
-            // exitToolStripMenuItem
-            // 
-            this.exitToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.exitToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.door_in;
-            this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(53, 20);
-            this.exitToolStripMenuItem.Text = "E&xit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
-            // 
-            // compareToolStripMenuItem
-            // 
-            this.compareToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.arrow_refresh;
-            this.compareToolStripMenuItem.Name = "compareToolStripMenuItem";
-            this.compareToolStripMenuItem.Size = new System.Drawing.Size(84, 20);
-            this.compareToolStripMenuItem.Text = "&Compare";
-            this.compareToolStripMenuItem.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
-            // 
-            // databasesToolStripMenuItem
-            // 
-            this.databasesToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.databasesToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.database_gear;
-            this.databasesToolStripMenuItem.Name = "databasesToolStripMenuItem";
-            this.databasesToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
-            this.databasesToolStripMenuItem.Text = "Databases";
-            this.databasesToolStripMenuItem.Click += new System.EventHandler(this.databasesToolStripMenuItem_Click);
-            // 
-            // optionsToolStripMenuItem
-            // 
-            this.optionsToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.optionsToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.cog;
-            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(77, 20);
-            this.optionsToolStripMenuItem.Text = "Options";
-            this.optionsToolStripMenuItem.Click += new System.EventHandler(this.optionsToolStripMenuItem_Click);
-            // 
-            // createScriptForSelectedToolStripMenuItem
-            // 
-            this.createScriptForSelectedToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.script;
-            this.createScriptForSelectedToolStripMenuItem.Name = "createScriptForSelectedToolStripMenuItem";
-            this.createScriptForSelectedToolStripMenuItem.Size = new System.Drawing.Size(165, 20);
-            this.createScriptForSelectedToolStripMenuItem.Text = "Create script for selected";
-            this.createScriptForSelectedToolStripMenuItem.Click += new System.EventHandler(this.createScriptForSelectedToolStripMenuItem_Click);
             // 
             // FormMain
             // 

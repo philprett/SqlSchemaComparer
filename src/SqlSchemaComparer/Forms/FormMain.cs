@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -43,6 +44,20 @@ namespace SqlSchemaComparer.Forms
                 winMerge = string.Empty;
         }
 
+        private void FormMain_Load(object sender, EventArgs e)
+        {
+            Text += " v" + Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+
+            toolStripStatusLabel.Text = "";
+            RefreshDatabases();
+
+            SavedValue db1 = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "database1");
+            SavedValue db2 = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "database2");
+
+            if (db1 != null) foreach (DatabaseConnection c in cmbDatabase1.Items) if (c.Id.ToString() == db1.Value) cmbDatabase1.SelectedItem = c;
+            if (db2 != null) foreach (DatabaseConnection c in cmbDatabase2.Items) if (c.Id.ToString() == db2.Value) cmbDatabase2.SelectedItem = c;
+        }
+
         private void databasesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             FormDatabases f = new FormDatabases();
@@ -70,18 +85,6 @@ namespace SqlSchemaComparer.Forms
 
             if (db1 != null) foreach (DatabaseConnection c in cmbDatabase1.Items) if (c.Id == db1.Id) cmbDatabase1.SelectedItem = c;
             if (db2 != null) foreach (DatabaseConnection c in cmbDatabase2.Items) if (c.Id == db2.Id) cmbDatabase2.SelectedItem = c;
-        }
-
-        private void FormMain_Load(object sender, EventArgs e)
-        {
-            toolStripStatusLabel.Text = "";
-            RefreshDatabases();
-
-            SavedValue db1 = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "database1");
-            SavedValue db2 = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "database2");
-
-            if (db1 != null) foreach (DatabaseConnection c in cmbDatabase1.Items) if (c.Id.ToString() == db1.Value) cmbDatabase1.SelectedItem = c;
-            if (db2 != null) foreach (DatabaseConnection c in cmbDatabase2.Items) if (c.Id.ToString() == db2.Value) cmbDatabase2.SelectedItem = c;
         }
 
         private void cmbDatabase1_DrawItem(object sender, DrawItemEventArgs e)
@@ -376,6 +379,7 @@ namespace SqlSchemaComparer.Forms
 
             FormViewScript f = new FormViewScript();
             f.Script = script.ToString();
+            f.DatabaseConnection = dbSelected2;
             f.ShowDialog();
         }
     }

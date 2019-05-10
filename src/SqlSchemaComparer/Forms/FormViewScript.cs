@@ -1,8 +1,10 @@
 ﻿using SqlSchemaComparer.AppData;
+using SqlSchemaComparer.DatabaseObjects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -12,7 +14,7 @@ using System.Windows.Forms;
 
 namespace SqlSchemaComparer.Forms
 {
-    public partial class FormViewScript : Form
+    internal partial class FormViewScript : Form
     {
         public string Script
         {
@@ -25,9 +27,18 @@ namespace SqlSchemaComparer.Forms
             }
         }
 
+        public DatabaseConnection DatabaseConnection { get; set; }
+
         public FormViewScript()
         {
             InitializeComponent();
+        }
+
+        private void FormViewScript_Load(object sender, EventArgs e)
+        {
+            txtScript.SelectionStart = 0;
+            txtScript.SelectionLength = 0;
+            toolStripStatusLabel.Text = "";
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -64,16 +75,80 @@ namespace SqlSchemaComparer.Forms
             }
         }
 
-        private void FormViewScript_Load(object sender, EventArgs e)
-        {
-            txtScript.SelectionStart = 0;
-            txtScript.SelectionLength = 0;
-        }
-
         private void copyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Clipboard.SetText(txtScript.Text);
             Close();
+        }
+
+        private void executeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!DatabaseConnection.IsSqlServer)
+            {
+                MessageBox.Show("Database 2 is not a SQL Server");
+            }
+            else
+            {
+                if (MessageBox.Show(
+                    string.Format("Do you really want to run this script on {0} on {1}?", DatabaseConnection.Database, DatabaseConnection.Server),
+                    "",
+                    MessageBoxButtons.YesNo
+                    ) != DialogResult.Yes)
+                {
+                    return;
+                }
+
+                using (SqlConnection sql = new SqlConnection(DatabaseConnection.ConnectionString))
+                {
+                    try
+                    {
+                        toolStripStatusLabel.Text = string.Format("Connecting to {0} on {1}...", DatabaseConnection.Database, DatabaseConnection.Server);
+                        Application.DoEvents();
+
+                        sql.Open();
+
+                        string[] statements = txtScript.Text.Split(new[] { "\nGO" }, StringSplitOptions.None);
+
+                        int counter = 0;
+                        foreach (string statement in statements)
+                        {
+                            counter++;
+                            toolStripStatusLabel.Text = string.Format("Executing statement {0} from {1}...", counter, statements.Length);
+                            Application.DoEvents();
+
+                            if (!string.IsNullOrWhiteSpace(statement))
+                            {
+                                try
+                                {
+                                    using (SqlCommand com = sql.CreateCommand())
+                                    {
+                                        com.CommandText = statement;
+                                        com.ExecuteNonQuery();
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    MessageBox.Show(string.Format("Error executing statement: {0}", ex.Message));
+                                    break;
+                                }
+                            }
+                        }
+                        toolStripStatusLabel.Text = string.Format("Execution successful");
+                        Application.DoEvents();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(string.Format("Error connecting to {0}: {1}", DatabaseConnection.Server, ex.Message));
+                    }
+                }
+            }
+
+        }
+
+        private void SqlServerProgressMade(object sender, DatabaseSqlServer.ProgressEventArgs e)
+        {
+            toolStripStatusLabel.Text = e.Message;
+            Application.DoEvents();
         }
     }
 }
