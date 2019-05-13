@@ -161,7 +161,10 @@ namespace SqlSchemaComparer.DatabaseObjects
 
                         if (existing != null)
                         {
-                            existing.CreateSQL.Append(objSql);
+                            if (objType != "U")
+                            {
+                                existing.CreateSQL.Append(objSql);
+                            }
                         }
                         else
                         {
