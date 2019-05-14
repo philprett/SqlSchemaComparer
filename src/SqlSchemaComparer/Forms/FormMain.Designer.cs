@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormMain));
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.cmbDatabase2 = new System.Windows.Forms.ComboBox();
@@ -39,8 +40,8 @@
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.databasesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.createScriptForSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createScriptForAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.createScriptForSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.Grid = new System.Windows.Forms.DataGridView();
@@ -166,14 +167,6 @@
             this.compareToolStripMenuItem.Text = "&Compare";
             this.compareToolStripMenuItem.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
             // 
-            // createScriptForSelectedToolStripMenuItem
-            // 
-            this.createScriptForSelectedToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.script;
-            this.createScriptForSelectedToolStripMenuItem.Name = "createScriptForSelectedToolStripMenuItem";
-            this.createScriptForSelectedToolStripMenuItem.Size = new System.Drawing.Size(165, 20);
-            this.createScriptForSelectedToolStripMenuItem.Text = "Create script for selected";
-            this.createScriptForSelectedToolStripMenuItem.Click += new System.EventHandler(this.createScriptForSelectedToolStripMenuItem_Click);
-            // 
             // createScriptForAllToolStripMenuItem
             // 
             this.createScriptForAllToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.script;
@@ -181,6 +174,14 @@
             this.createScriptForAllToolStripMenuItem.Size = new System.Drawing.Size(134, 20);
             this.createScriptForAllToolStripMenuItem.Text = "Create script for all";
             this.createScriptForAllToolStripMenuItem.Click += new System.EventHandler(this.createScriptForAllToolStripMenuItem_Click);
+            // 
+            // createScriptForSelectedToolStripMenuItem
+            // 
+            this.createScriptForSelectedToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.script;
+            this.createScriptForSelectedToolStripMenuItem.Name = "createScriptForSelectedToolStripMenuItem";
+            this.createScriptForSelectedToolStripMenuItem.Size = new System.Drawing.Size(165, 20);
+            this.createScriptForSelectedToolStripMenuItem.Text = "Create script for selected";
+            this.createScriptForSelectedToolStripMenuItem.Click += new System.EventHandler(this.createScriptForSelectedToolStripMenuItem_Click);
             // 
             // statusStrip1
             // 
@@ -230,9 +231,12 @@
             // 
             // ObjectStatus
             // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            this.ObjectStatus.DefaultCellStyle = dataGridViewCellStyle1;
             this.ObjectStatus.HeaderText = "Status";
             this.ObjectStatus.Name = "ObjectStatus";
             this.ObjectStatus.ReadOnly = true;
+            this.ObjectStatus.Width = 150;
             // 
             // Object2
             // 
@@ -283,12 +287,12 @@
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         private System.Windows.Forms.DataGridView Grid;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Object1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ObjectStatus;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Object2;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createScriptForSelectedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createScriptForAllToolStripMenuItem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Object1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ObjectStatus;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Object2;
     }
 }
 

@@ -18,6 +18,7 @@ namespace SqlSchemaComparer.DatabaseObjects
             {
                 if (ObjectType == "U") return 1;
                 if (ObjectType == "V") return 2;
+                if (ObjectType == "TF") return 3;
                 if (ObjectType == "FN") return 3;
                 if (ObjectType == "P") return 4;
                 return 5;
@@ -29,8 +30,9 @@ namespace SqlSchemaComparer.DatabaseObjects
             {
                 if (ObjectType == "U") return "TABLE";
                 if (ObjectType == "V") return "VIEW";
-                if (ObjectType == "FN") return "FUNC";
-                if (ObjectType == "P") return "PROC";
+                if (ObjectType == "FN") return "FUNCTION";
+                if (ObjectType == "TF") return "FUNCTION";
+                if (ObjectType == "P") return "PROCEDURE";
                 return "";
             }
         }

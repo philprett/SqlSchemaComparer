@@ -367,12 +367,6 @@ namespace SqlSchemaComparer.Forms
                 }
                 else if (action.StartsWith("DROP", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    string alterSql = obj1.CreateSQL.ChangeCreateToAlter().Str;
-                    script.Append(alterSql);
-                    if (!obj1.CreateSQL.Str.EndsWith("\n"))
-                    {
-                        script.Append("\r\n");
-                    }
                     script.Append(string.Format("{0} {1}.{2}\r\nGO\r\n", action, obj2.Schema, obj2.Name));
                 }
             }
