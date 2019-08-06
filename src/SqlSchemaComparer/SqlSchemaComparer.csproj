@@ -75,6 +75,7 @@
     <Compile Include="DatabaseObjects\DatabaseFolder.cs" />
     <Compile Include="DatabaseObjects\DatabaseObject.cs" />
     <Compile Include="DatabaseObjects\DatabaseSqlServer.cs" />
+    <Compile Include="DatabaseObjects\DatabaseSqlServerIndex.cs" />
     <Compile Include="DatabaseObjects\DatabaseSqlServerTableColumn.cs" />
     <Compile Include="Forms\FormDatabase.cs">
       <SubType>Form</SubType>

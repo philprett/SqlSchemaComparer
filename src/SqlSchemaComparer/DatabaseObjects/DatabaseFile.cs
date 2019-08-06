@@ -28,26 +28,20 @@ namespace SqlSchemaComparer.DatabaseObjects
             ContentsStripped = Contents.CommentsToSpaces();
             ContentsReducedWhiteSpace = ContentsStripped.ReduceWhiteSpace();
 
-            int pos = ContentsReducedWhiteSpace.ToString().IndexOf("CREATE TABLE", StringComparison.CurrentCultureIgnoreCase);
-            if (pos >= 0)
+			ObjectName = ContentsReducedWhiteSpace.GetObjectTypeFromCreateSql();
+			if (ContentsReducedWhiteSpace.IsCreateTable)
             {
                 ObjectType = "U";
-                ObjectName = ContentsReducedWhiteSpace.ToString().Substring(pos + 13);
-                if (ObjectName.IndexOf(" ") >= 0) ObjectName = ObjectName.Substring(0, ObjectName.IndexOf(" "));
-                if (ObjectName.IndexOf("(") >= 0) ObjectName = ObjectName.Substring(0, ObjectName.IndexOf("("));
-                if (ObjectName.IndexOf(".") >= 0) ObjectName = ObjectName.Substring(ObjectName.LastIndexOf(".") + 1);
-                if (ObjectName[0] == '[') ObjectName = ObjectName.Substring(1);
-                if (ObjectName[ObjectName.Length - 1] == ']') ObjectName = ObjectName.Substring(0, ObjectName.Length - 1);
             }
-            else if (ContentsReducedWhiteSpace.ToString().IndexOf("CREATE VIEW", StringComparison.CurrentCultureIgnoreCase) >= 0)
+            else if (ContentsReducedWhiteSpace.IsCreateView)
             {
                 ObjectType = "V";
             }
-            else if (ContentsReducedWhiteSpace.ToString().IndexOf("CREATE FUNC", StringComparison.CurrentCultureIgnoreCase) >= 0)
+            else if (ContentsReducedWhiteSpace.IsCreateFunction)
             {
                 ObjectType = "FN";
             }
-            else if (ContentsReducedWhiteSpace.ToString().IndexOf("CREATE PROC", StringComparison.CurrentCultureIgnoreCase) >= 0)
+            else if (ContentsReducedWhiteSpace.IsCreateProcedure)
             {
                 ObjectType = "P";
             }

@@ -126,82 +126,128 @@ namespace SqlSchemaComparer
             return new SqlString(ret.Trim());
         }
 
-        public bool IsCreateTable { get { return this.CommentsToSpaces().ReduceWhiteSpace().ToString().IndexOf("CREATE TABLE", StringComparison.CurrentCultureIgnoreCase) >= 0; } }
-        public bool IsCreateView { get { return this.CommentsToSpaces().ReduceWhiteSpace().ToString().IndexOf("CREATE VIEW", StringComparison.CurrentCultureIgnoreCase) >= 0; } }
-        public bool IsCreateFunction { get { return this.CommentsToSpaces().ReduceWhiteSpace().ToString().IndexOf("CREATE FUNC", StringComparison.CurrentCultureIgnoreCase) >= 0; } }
-        public bool IsCreateProcedure { get { return this.CommentsToSpaces().ReduceWhiteSpace().ToString().IndexOf("CREATE PROC", StringComparison.CurrentCultureIgnoreCase) >= 0; } }
+        public bool IsCreateTable { get { return this.GetObjectTypeFromCreateSql() == "TABLE"; } }
+        public bool IsCreateView { get { return this.GetObjectTypeFromCreateSql() == "VIEW"; } }
+        public bool IsCreateFunction { get { return this.GetObjectTypeFromCreateSql() == "FUNC"; } }
+        public bool IsCreateProcedure { get { return this.GetObjectTypeFromCreateSql() == "PROC"; } }
 
-        public string GetNameFromCreateSQL()
+        public string GetObjectTypeFromCreateSql()
         {
             SqlString noComments = this.CommentsToSpaces();
             SqlString reducedWhitespace = noComments.ReduceWhiteSpace();
 
-            string name = string.Empty;
-            int pos = reducedWhitespace.Str.IndexOf("CREATE TABLE", StringComparison.CurrentCultureIgnoreCase);
-            if (pos >= 0)
-            {
-                name = reducedWhitespace.Str.Substring(pos + 13);
-                int spacePos = name.IndexOf(" ");
-                int bracketPos = name.IndexOf("(");
-                if (spacePos >= 0 && bracketPos >= 0)
-                {
-                    if (spacePos < bracketPos)
-                    {
-                        name = name.Substring(0, spacePos);
-                    }
-                    else if (spacePos > bracketPos)
-                    {
-                        name = name.Substring(0, bracketPos);
-                    }
-                }
-                else if (spacePos >= 0)
-                {
-                    name = name.Substring(0, spacePos);
-                }
-                else if (bracketPos >= 0)
-                {
-                    name = name.Substring(0, bracketPos);
-                }
-                else
-                {
-                    name = string.Empty;
-                }
-            }
-            else
-            {
-                pos = reducedWhitespace.Str.IndexOf("CREATE VIEW", StringComparison.CurrentCultureIgnoreCase);
-                if (pos < 0) pos = reducedWhitespace.Str.IndexOf("CREATE FUNC", StringComparison.CurrentCultureIgnoreCase);
-                if (pos < 0) pos = reducedWhitespace.Str.IndexOf("CREATE PROC", StringComparison.CurrentCultureIgnoreCase);
-                if (pos >= 0)
-                {
-                    if (reducedWhitespace.Str.Substring(pos, 15).Equals("CREATE FUNCTION", StringComparison.CurrentCultureIgnoreCase))
-                        name = reducedWhitespace.Str.Substring(pos + 16);
-                    else if (reducedWhitespace.Str.Substring(pos, 16).Equals("CREATE PROCEDURE", StringComparison.CurrentCultureIgnoreCase))
-                        name = reducedWhitespace.Str.Substring(pos + 17);
-                    else
-                        name = reducedWhitespace.Str.Substring(pos + 12);
-                    int spacePos = name.IndexOf(" ");
-                    if (spacePos >= 0)
-                    {
-                        name = name.Substring(0, spacePos);
-                    }
-                    else
-                    {
-                        name = string.Empty;
-                    }
-                }
-            }
+			int posTable = reducedWhitespace.Str.IndexOf("CREATE TABLE", StringComparison.CurrentCultureIgnoreCase);
+			int posView = reducedWhitespace.Str.IndexOf("CREATE VIEW", StringComparison.CurrentCultureIgnoreCase);
+			int posFunc = reducedWhitespace.Str.IndexOf("CREATE FUNC", StringComparison.CurrentCultureIgnoreCase);
+            int posProc = reducedWhitespace.Str.IndexOf("CREATE PROC", StringComparison.CurrentCultureIgnoreCase);
 
-            if (!string.IsNullOrWhiteSpace(name))
-            {
-                name = name.Replace("[", "");
-                name = name.Replace("]", "");
-            }
+			if (posTable >= 0 &&
+				(posView < 0 || posTable < posView) &&
+				(posFunc < 0 || posTable < posFunc) &&
+				(posProc < 0 || posTable < posProc))
+			{
+				return "TABLE";
+			}
+			if (posView >= 0 &&
+				(posTable < 0 || posView < posTable) &&
+				(posFunc < 0 || posView < posFunc) &&
+				(posProc < 0 || posView < posProc))
+			{
+				return "VIEW";
+			}
+			if (posFunc >= 0 &&
+				(posTable < 0 || posFunc < posTable) &&
+				(posView < 0 || posFunc < posView) &&
+				(posProc < 0 || posFunc < posProc))
+			{
+				return "FUNC";
+			}
+			if (posProc >= 0 &&
+				(posTable < 0 || posProc < posTable) &&
+				(posView < 0 || posProc < posView) &&
+				(posFunc < 0 || posProc < posFunc))
+			{
+				return "PROC";
+			}
 
-            return name;
+			return string.Empty;
         }
 
-        public bool FunctionallyEquals(SqlString otherSqlString, bool ignoreComments, bool ignoreGo, bool caseSensitive)
+		public string GetNameFromCreateSQL()
+		{
+			SqlString noComments = this.CommentsToSpaces();
+			SqlString reducedWhitespace = noComments.ReduceWhiteSpace();
+
+			string name = string.Empty;
+			int pos = reducedWhitespace.Str.IndexOf("CREATE TABLE", StringComparison.CurrentCultureIgnoreCase);
+			if (pos >= 0)
+			{
+				name = reducedWhitespace.Str.Substring(pos + 13);
+				int spacePos = name.IndexOf(" ");
+				int bracketPos = name.IndexOf("(");
+				if (spacePos >= 0 && bracketPos >= 0)
+				{
+					if (spacePos < bracketPos)
+					{
+						name = name.Substring(0, spacePos);
+					}
+					else if (spacePos > bracketPos)
+					{
+						name = name.Substring(0, bracketPos);
+					}
+				}
+				else if (spacePos >= 0)
+				{
+					name = name.Substring(0, spacePos);
+				}
+				else if (bracketPos >= 0)
+				{
+					name = name.Substring(0, bracketPos);
+				}
+				else
+				{
+					name = string.Empty;
+				}
+				if (name.StartsWith("#"))
+				{
+					name = string.Empty;
+					pos = -1;
+				}
+			}
+			if (pos < 0)
+			{
+				pos = reducedWhitespace.Str.IndexOf("CREATE VIEW", StringComparison.CurrentCultureIgnoreCase);
+				if (pos < 0) pos = reducedWhitespace.Str.IndexOf("CREATE FUNC", StringComparison.CurrentCultureIgnoreCase);
+				if (pos < 0) pos = reducedWhitespace.Str.IndexOf("CREATE PROC", StringComparison.CurrentCultureIgnoreCase);
+				if (pos >= 0)
+				{
+					if (reducedWhitespace.Str.Substring(pos, 15).Equals("CREATE FUNCTION", StringComparison.CurrentCultureIgnoreCase))
+						name = reducedWhitespace.Str.Substring(pos + 16);
+					else if (reducedWhitespace.Str.Substring(pos, 16).Equals("CREATE PROCEDURE", StringComparison.CurrentCultureIgnoreCase))
+						name = reducedWhitespace.Str.Substring(pos + 17);
+					else
+						name = reducedWhitespace.Str.Substring(pos + 12);
+					int spacePos = name.IndexOf(" ");
+					if (spacePos >= 0)
+					{
+						name = name.Substring(0, spacePos);
+					}
+					else
+					{
+						name = string.Empty;
+					}
+				}
+			}
+
+			if (!string.IsNullOrWhiteSpace(name))
+			{
+				name = name.Replace("[", "");
+				name = name.Replace("]", "");
+			}
+
+			return name;
+		}
+		public bool FunctionallyEquals(SqlString otherSqlString, bool ignoreComments, bool ignoreGo, bool caseSensitive)
         {
             SqlString sql1 = ignoreComments ? CommentsToSpaces() : new SqlString(Str);
             SqlString sql2 = ignoreComments ? otherSqlString.CommentsToSpaces() : new SqlString(otherSqlString.Str);
@@ -225,16 +271,39 @@ namespace SqlSchemaComparer
 
         public bool DependsOn(string objectName)
         {
-            return StrNoComments.IndexOf(objectName, StringComparison.CurrentCultureIgnoreCase) >= 0;
-        }
+			string objectNameNoSchema = objectName.Contains(".") ? objectName.Substring(objectName.IndexOf(".") + 1) : objectName;
 
-        public SqlString ChangeCreateToAlter()
+			if (StrNoComments.IndexOf(objectNameNoSchema + " ", StringComparison.CurrentCultureIgnoreCase) >= 0) return true;
+			if (StrNoComments.IndexOf(objectNameNoSchema + "\t", StringComparison.CurrentCultureIgnoreCase) >= 0) return true;
+			if (StrNoComments.IndexOf(objectNameNoSchema + "\r", StringComparison.CurrentCultureIgnoreCase) >= 0) return true;
+			if (StrNoComments.IndexOf(objectNameNoSchema + "\n", StringComparison.CurrentCultureIgnoreCase) >= 0) return true;
+			if (StrNoComments.IndexOf(objectNameNoSchema + "(", StringComparison.CurrentCultureIgnoreCase) >= 0) return true;
+			return false;
+		}
+
+		public SqlString ChangeCreateToAlter()
         {
             int createPos = StrNoComments.IndexOf("CREATE", StringComparison.CurrentCultureIgnoreCase);
             if (createPos < 0) throw new Exception("Not a CREATE SQL statement");
 
-            string alterSql = Str.Substring(0, createPos) + "ALTER  " + Str.Substring(createPos + 6);
+            string alterSql = Str.Substring(0, createPos) + "ALTER " + Str.Substring(createPos + 6);
             return new SqlString(alterSql);
+        }
+
+        public SqlString ChangeCreateToDropCreate()
+        {
+            string strippedSQL = new SqlString(this.StrNoComments).ReduceWhiteSpace().StrNoComments;
+            int createPos = StrNoComments.IndexOf("CREATE", StringComparison.CurrentCultureIgnoreCase);
+            if (createPos < 0) throw new Exception("Not a CREATE SQL statement");
+
+            string createSql = strippedSQL.Substring(strippedSQL.IndexOf("CREATE")).TrimStart().Replace("(", " (").Replace("\t", " \t").Replace("\r", " \r").Replace("\n", " \n");
+            int spacePos = createSql.IndexOf(" ");
+            spacePos = createSql.IndexOf(" ", spacePos + 1);
+            spacePos = createSql.IndexOf(" ", spacePos + 1);
+            createSql = createSql.Substring(0, spacePos);
+
+            string dropCreateSql = "DROP" + createSql.Substring(6)+"\r\nGO\r\n"+Str;
+            return new SqlString(dropCreateSql);
         }
     }
 }

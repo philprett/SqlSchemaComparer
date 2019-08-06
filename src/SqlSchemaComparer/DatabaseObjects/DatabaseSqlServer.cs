@@ -62,11 +62,12 @@ namespace SqlSchemaComparer.DatabaseObjects
             "WHERE       fk.type = 'F' " +
             "ORDER BY    p.name, c.name ";
         private const string SQL_GET_INDEXES =
-            "select     distinct i.name as IndexName, c.name as ColumnName, o.name as tablename " +
+            "select     distinct s.name as SchemaName, i.name as IndexName, c.name as ColumnName, o.name as tablename " +
             "from       sys.indexes i " +
-            "inner join sys.index_columns ic on ic.object_id = i.object_id and ic.index_id = i.index_id " +
+			"inner join sys.index_columns ic on ic.object_id = i.object_id and ic.index_id = i.index_id " +
             "inner join sys.objects o on o.object_id = i.object_id and o.is_ms_shipped = 0 " +
-            "inner join sys.columns c on c.object_id = o.object_id and c.column_id = ic.column_id " +
+			"inner join sys.schemas s on o.schema_id = s.schema_id " +
+			"inner join sys.columns c on c.object_id = o.object_id and c.column_id = ic.column_id " +
             "where      i.is_primary_key = 0 " +
             "order by   o.name, i.name, c.name";
         private const string SQL_GET_PERMISSIONS =
@@ -145,7 +146,8 @@ namespace SqlSchemaComparer.DatabaseObjects
                         using (SqlDataAdapter da = new SqlDataAdapter(com)) da.Fill(rsIndexes);
                     }
 
-                    List<DatabaseSqlServerTableColumn> columns = DatabaseSqlServerTableColumn.GetFromDataTable(rsTableColumns, rsTablesPKs, rsIndexes);
+                    List<DatabaseSqlServerTableColumn> columns = DatabaseSqlServerTableColumn.GetFromDataTable(rsTableColumns, rsTablesPKs);
+					List<DatabaseSqlServerIndex> indexes = DatabaseSqlServerIndex.GetFromDataTable(rsIndexes);
 
                     foreach (DataRow row in rsObjects.Rows)
                     {
@@ -170,7 +172,7 @@ namespace SqlSchemaComparer.DatabaseObjects
                         {
                             if (objType == "U")
                             {
-                                objSql = CreateTableSQL(objSchema, objName, columns);
+                                objSql = CreateTableSQL(objSchema, objName, columns, indexes);
                             }
                             ret.Add(new DatabaseObject() { Schema = objSchema, Name = objName, ObjectType = objType, CreateSQL = new SqlString(objSql) });
                         }
@@ -186,14 +188,19 @@ namespace SqlSchemaComparer.DatabaseObjects
                 }
             }
         }
-        private string CreateTableSQL(string schema, string name, List<DatabaseSqlServerTableColumn> allColumns)
+        private string CreateTableSQL(string schema, string name, List<DatabaseSqlServerTableColumn> allColumns, List<DatabaseSqlServerIndex> allIndexes)
         {
-            List<DatabaseSqlServerTableColumn> columns = allColumns
-                .Where(c => c.SchemaName == schema && c.ObjectName == name)
-                .OrderBy(c => c.ColumnID)
-                .ToList();
+			List<DatabaseSqlServerTableColumn> columns = allColumns
+				.Where(c => c.SchemaName == schema && c.ObjectName == name)
+				.OrderBy(c => c.ColumnID)
+				.ToList();
 
-            List<string> rawColumnTypes = columns.Select(c => c.GetDefinitionType().ToUpper()).ToList();
+			List<DatabaseSqlServerIndex> indexes = allIndexes
+				.Where(c => c.TableName == name)
+				.OrderBy(c => c.IndexName)
+				.ToList();
+
+			List<string> rawColumnTypes = columns.Select(c => c.GetDefinitionType().ToUpper()).ToList();
 
             int maxColumnName = columns.Max(c => c.ColumnName.Length);
             int maxColumnType = rawColumnTypes.Max(c => c.Length);
@@ -225,26 +232,26 @@ namespace SqlSchemaComparer.DatabaseObjects
                 {
                     string colDef = column.GetDefinitionType();
                     sql.Append(string.Format(
-                        "    {0} {1} {2}{3}{4}{5}\r\n",
+                        "    {0} {1} {2}{3}{4}{5}{6}\r\n",
                         columnNames[c],
                         columnTypes[c],
                         column.IsNullable ? "    NULL" : "NOT NULL",
                         string.IsNullOrWhiteSpace(column.DefaultValue) ? "" : " DEFAULT " + column.DefaultValue,
                         column.IsPrimaryKey ? " PRIMARY KEY" : "",
+                        column.IsIdentity ? " IDENTITY(1,1)" : "",
                         c == columns.Count - 1 ? "" : ","));
                 }
             }
 
             sql.Append(string.Format(")\r\n"));
 
-            List<DatabaseSqlServerTableColumn> indexColumns = columns.Where(c => !string.IsNullOrWhiteSpace(c.IndexName)).ToList();
-            if (indexColumns.Count > 0)
+            if (indexes.Count > 0)
             {
                 sql.Append("GO\r\n\r\n");
 
-                foreach (DatabaseSqlServerTableColumn column in indexColumns.OrderBy(c => c.ColumnName).OrderBy(c => c.IndexName))
+                foreach (DatabaseSqlServerIndex index in indexes.OrderBy(c => c.IndexName))
                 {
-                    sql.Append(string.Format("CREATE INDEX {0} ON {1}.{2}({3})\r\nGO\r\n", column.IndexName, schema, name, column.ColumnName));
+					sql.Append(string.Format("{0}\r\nGO\r\n", index.CreateSQL));
                 }
             }
 

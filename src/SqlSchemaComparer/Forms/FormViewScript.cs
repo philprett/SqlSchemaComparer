@@ -16,6 +16,7 @@ namespace SqlSchemaComparer.Forms
 {
     internal partial class FormViewScript : Form
     {
+		public bool AutoExecute { get; set; }
         public string Script
         {
             get { return txtScript.Text; }
@@ -29,16 +30,28 @@ namespace SqlSchemaComparer.Forms
 
         public DatabaseConnection DatabaseConnection { get; set; }
 
-        public FormViewScript()
-        {
-            InitializeComponent();
-        }
+		public FormViewScript()
+		{
+			InitializeComponent();
+			AutoExecute = false;
+		}
+		public FormViewScript(DatabaseConnection databaseConnection, string script)
+		{
+			InitializeComponent();
+			DatabaseConnection = databaseConnection;
+			Script = script;
+			AutoExecute = true;
+		}
 
-        private void FormViewScript_Load(object sender, EventArgs e)
+		private void FormViewScript_Load(object sender, EventArgs e)
         {
             txtScript.SelectionStart = 0;
             txtScript.SelectionLength = 0;
             toolStripStatusLabel.Text = "";
+			if (AutoExecute)
+			{
+				executeToolStripMenuItem_Click(sender, e);
+			}
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -89,7 +102,8 @@ namespace SqlSchemaComparer.Forms
             }
             else
             {
-                if (MessageBox.Show(
+                if (!AutoExecute &&
+					MessageBox.Show(
                     string.Format("Do you really want to run this script on {0} on {1}?", DatabaseConnection.Database, DatabaseConnection.Server),
                     "",
                     MessageBoxButtons.YesNo
@@ -135,6 +149,7 @@ namespace SqlSchemaComparer.Forms
                         }
                         toolStripStatusLabel.Text = string.Format("Execution successful");
                         Application.DoEvents();
+                        Close();
                     }
                     catch (Exception ex)
                     {
