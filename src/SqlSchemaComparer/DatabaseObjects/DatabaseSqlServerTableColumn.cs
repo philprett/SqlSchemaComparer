@@ -58,6 +58,7 @@ namespace SqlSchemaComparer.DatabaseObjects
 			}
 			else if (ColumnType == "nvarchar" || ColumnType == "nchar")
 			{
+				//return string.Format("{0}({1})", ColumnType, MaxLength == -1 ? "MAX" : (MaxLength / 2).ToString());
 				return string.Format("{0}({1})", ColumnType, MaxLength == -1 ? "MAX" : MaxLength.ToString());
 			}
 			else

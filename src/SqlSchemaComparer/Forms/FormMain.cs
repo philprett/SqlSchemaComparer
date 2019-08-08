@@ -351,6 +351,7 @@ namespace SqlSchemaComparer.Forms
 				DatabaseObject obj2 = (DatabaseObject)row.Cells[2].Tag;
 				if (action.StartsWith("CREATE", StringComparison.CurrentCultureIgnoreCase))
 				{
+					script.Append(obj1.DropSQL);
 					script.Append(obj1.CreateSQL);
 					if (!obj1.CreateSQL.Str.Trim().EndsWith("GO", StringComparison.CurrentCultureIgnoreCase))
 					{
@@ -367,8 +368,10 @@ namespace SqlSchemaComparer.Forms
 				}
 				else if (action.StartsWith("ALTER", StringComparison.CurrentCultureIgnoreCase))
 				{
-					string alterSql = obj1.ObjectType != "U" ? obj1.CreateSQL.ChangeCreateToAlter().Str : obj1.CreateSQL.ChangeCreateToDropCreate().Str;
-					script.Append(alterSql);
+					//string alterSql = obj1.ObjectType != "U" ? obj1.CreateSQL.ChangeCreateToAlter().Str : obj1.CreateSQL.ChangeCreateToDropCreate().Str;
+					//script.Append(alterSql);
+					script.Append(obj1.DropSQL);
+					script.Append(obj1.CreateSQL);
 					if (!obj1.CreateSQL.Str.EndsWith("\n"))
 					{
 						script.Append("\r\n");
@@ -377,7 +380,8 @@ namespace SqlSchemaComparer.Forms
 				}
 				else if (action.StartsWith("DROP", StringComparison.CurrentCultureIgnoreCase))
 				{
-					script.Append(string.Format("{0} {1}.{2}\r\nGO\r\n", action, obj2.Schema, obj2.Name));
+					//script.Append(string.Format("{0} {1}.{2}\r\nGO\r\n", action, obj2.Schema, obj2.Name));
+					script.Append(obj2.DropSQL);
 				}
 			}
 
