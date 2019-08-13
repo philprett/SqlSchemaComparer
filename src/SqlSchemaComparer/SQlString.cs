@@ -75,7 +75,7 @@ namespace SqlSchemaComparer
             bool inComment = false;
             for (int c = 0; c < charsLength - 1; c++)
             {
-                if (!inComment && chars[c] == '-' && chars[c] == '-')
+                if (!inComment && chars[c] == '-' && chars[c+1] == '-')
                 {
                     inComment = true;
                 }
