@@ -42,13 +42,13 @@
 			this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.createScriptForAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.createScriptForSelectedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.compareAndExecuteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.statusStrip1 = new System.Windows.Forms.StatusStrip();
 			this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
 			this.Grid = new System.Windows.Forms.DataGridView();
 			this.Object1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.ObjectStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Object2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
-			this.compareAndExecuteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.groupBox1.SuspendLayout();
 			this.menuStrip1.SuspendLayout();
 			this.statusStrip1.SuspendLayout();
@@ -185,6 +185,14 @@
 			this.createScriptForSelectedToolStripMenuItem.Text = "Create script for &selected";
 			this.createScriptForSelectedToolStripMenuItem.Click += new System.EventHandler(this.createScriptForSelectedToolStripMenuItem_Click);
 			// 
+			// compareAndExecuteToolStripMenuItem
+			// 
+			this.compareAndExecuteToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.database_refresh;
+			this.compareAndExecuteToolStripMenuItem.Name = "compareAndExecuteToolStripMenuItem";
+			this.compareAndExecuteToolStripMenuItem.Size = new System.Drawing.Size(150, 20);
+			this.compareAndExecuteToolStripMenuItem.Text = "Compare and &execute";
+			this.compareAndExecuteToolStripMenuItem.Click += new System.EventHandler(this.compareAndExecuteToolStripMenuItem_Click);
+			// 
 			// statusStrip1
 			// 
 			this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -246,14 +254,6 @@
 			this.Object2.HeaderText = "Database 2";
 			this.Object2.Name = "Object2";
 			this.Object2.ReadOnly = true;
-			// 
-			// compareAndExecuteToolStripMenuItem
-			// 
-			this.compareAndExecuteToolStripMenuItem.Image = global::SqlSchemaComparer.Properties.Resources.database_refresh;
-			this.compareAndExecuteToolStripMenuItem.Name = "compareAndExecuteToolStripMenuItem";
-			this.compareAndExecuteToolStripMenuItem.Size = new System.Drawing.Size(150, 20);
-			this.compareAndExecuteToolStripMenuItem.Text = "Compare and &execute";
-			this.compareAndExecuteToolStripMenuItem.Click += new System.EventHandler(this.compareAndExecuteToolStripMenuItem_Click);
 			// 
 			// FormMain
 			// 

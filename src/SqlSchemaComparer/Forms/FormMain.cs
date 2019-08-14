@@ -38,10 +38,15 @@ namespace SqlSchemaComparer.Forms
 			showIdentical = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "showidentical").Value == "1";
 			includeDropActions = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "includedropactions").Value == "1";
 
-			if (File.Exists(@"C:\Program Files (x86)\WinMerge\WinMergeU.exe"))
-				winMerge = @"C:\Program Files (x86)\WinMerge\WinMergeU.exe";
-			else
-				winMerge = string.Empty;
+			winMerge = string.Empty;
+			string tryWinmerge = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WinMerge", "WinMergeU.exe");
+			if (string.IsNullOrEmpty(winMerge) && File.Exists(tryWinmerge)) winMerge = tryWinmerge;
+
+			tryWinmerge = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "WinMerge", "WinMergeU.exe");
+			if (string.IsNullOrEmpty(winMerge) && File.Exists(tryWinmerge)) winMerge = tryWinmerge;
+
+			tryWinmerge = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Programs", "WinMerge", "WinMergeU.exe");
+			if (string.IsNullOrEmpty(winMerge) && File.Exists(tryWinmerge)) winMerge = tryWinmerge;
 		}
 
 		private void FormMain_Load(object sender, EventArgs e)
@@ -408,5 +413,6 @@ namespace SqlSchemaComparer.Forms
 			createScript(true, true);
 			Application.DoEvents();
 		}
+
 	}
 }
