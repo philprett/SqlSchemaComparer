@@ -48,7 +48,7 @@ namespace SqlSchemaComparer.DatabaseObjects
 
 		public string GetDefinitionType()
 		{
-			if (ColumnType == "real" || ColumnType == "money" || ColumnType == "float" || ColumnType == "decimal" || ColumnType == "numeric" || ColumnType == "smallmoney")
+			if (ColumnType == "real" || ColumnType == "money" || ColumnType == "decimal" || ColumnType == "numeric" || ColumnType == "smallmoney")
 			{
 				return string.Format("{0}({1},{2})", ColumnType, Precision, Scale);
 			}
@@ -58,8 +58,8 @@ namespace SqlSchemaComparer.DatabaseObjects
 			}
 			else if (ColumnType == "nvarchar" || ColumnType == "nchar")
 			{
-				//return string.Format("{0}({1})", ColumnType, MaxLength == -1 ? "MAX" : (MaxLength / 2).ToString());
-				return string.Format("{0}({1})", ColumnType, MaxLength == -1 ? "MAX" : MaxLength.ToString());
+				return string.Format("{0}({1})", ColumnType, MaxLength == -1 ? "MAX" : (MaxLength / 2).ToString());
+				//return string.Format("{0}({1})", ColumnType, MaxLength == -1 ? "MAX" : MaxLength.ToString());
 			}
 			else
 			{
