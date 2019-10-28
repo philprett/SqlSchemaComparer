@@ -46,6 +46,11 @@ namespace SqlSchemaComparer.AppData
         /// </summary>
         public string Database { get; set; }
 
+		/// <summary>
+		/// Whether the application is allowed to update the database
+		/// </summary>
+		public bool AllowChanges { get; set; }
+
         public DatabaseConnection()
         {
             Id.SetRandom();
@@ -53,6 +58,7 @@ namespace SqlSchemaComparer.AppData
             Username = string.Empty;
             Password = string.Empty;
             Database = string.Empty;
+			AllowChanges = false;
         }
 
         public bool IsSqlServer { get { return !IsFolder; } }

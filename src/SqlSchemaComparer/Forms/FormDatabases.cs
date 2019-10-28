@@ -65,7 +65,8 @@ namespace SqlSchemaComparer.Forms
                     Server = f.Host,
                     Username = f.Username,
                     Password = f.Password,
-                    Database = f.Database
+                    Database = f.Database,
+					AllowChanges = f.AllowChanges
                 };
                 AppDataContext.DB.DatabaseConnections.Add(newDB);
                 AppDataContext.DB.SaveChanges();
@@ -84,6 +85,7 @@ namespace SqlSchemaComparer.Forms
             f.Username= dbConnection.Username;
             f.Password = dbConnection.Password;
             f.Database= dbConnection.Database;
+			f.AllowChanges = dbConnection.AllowChanges;
             if (f.ShowDialog() == DialogResult.OK)
             {
                 dbConnection.Name = f.DatabaseName;
@@ -91,6 +93,7 @@ namespace SqlSchemaComparer.Forms
                 dbConnection.Username = f.Username;
                 dbConnection.Password = f.Password;
                 dbConnection.Database = f.Database;
+				dbConnection.AllowChanges = f.AllowChanges;
                 AppDataContext.DB.SaveChanges();
                 FormDatabases_Load(sender, e);
             }

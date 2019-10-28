@@ -82,6 +82,7 @@
 			this.cmbDatabase2.Size = new System.Drawing.Size(844, 21);
 			this.cmbDatabase2.TabIndex = 3;
 			this.cmbDatabase2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cmbDatabase2_DrawItem);
+			this.cmbDatabase2.SelectedIndexChanged += new System.EventHandler(this.cmbDatabase2_SelectedIndexChanged);
 			// 
 			// label2
 			// 

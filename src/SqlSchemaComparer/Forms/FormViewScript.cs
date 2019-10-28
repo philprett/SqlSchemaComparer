@@ -48,7 +48,8 @@ namespace SqlSchemaComparer.Forms
             txtScript.SelectionStart = 0;
             txtScript.SelectionLength = 0;
             toolStripStatusLabel.Text = "";
-			if (AutoExecute)
+			executeToolStripMenuItem.Enabled = DatabaseConnection.AllowChanges;
+			if (AutoExecute && DatabaseConnection.AllowChanges)
 			{
 				executeToolStripMenuItem_Click(sender, e);
 			}

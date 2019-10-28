@@ -414,5 +414,11 @@ namespace SqlSchemaComparer.Forms
 			Application.DoEvents();
 		}
 
+		private void cmbDatabase2_SelectedIndexChanged(object sender, EventArgs e)
+		{
+			DatabaseConnection db = (DatabaseConnection)cmbDatabase2.SelectedItem;
+
+			compareAndExecuteToolStripMenuItem.Enabled = db != null && db.AllowChanges;
+		}
 	}
 }

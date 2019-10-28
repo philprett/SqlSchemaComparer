@@ -16,9 +16,11 @@ namespace SqlSchemaComparer.Forms
         public string Host { get { return txtHost.Text; } set { txtHost.Text = value; } }
         public string Username { get { return txtUsername.Text; } set { txtUsername.Text = value; } }
         public string Password { get { return txtPassword.Text; } set { txtPassword.Text = value; } }
-        public string Database { get { return txtDatabase.Text; } set { txtDatabase.Text = value; } }
+		public string Database { get { return txtDatabase.Text; } set { txtDatabase.Text = value; } }
+		public bool AllowChanges { get { return chkAllowChanges.Checked; } set { chkAllowChanges.Checked = value; } }
 
-        public FormDatabase()
+
+		public FormDatabase()
         {
             InitializeComponent();
         }
@@ -32,5 +34,6 @@ namespace SqlSchemaComparer.Forms
         {
             DialogResult = DialogResult.Cancel;
         }
-    }
+
+	}
 }
