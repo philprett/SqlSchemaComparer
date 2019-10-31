@@ -13,6 +13,7 @@ namespace SqlSchemaComparer.DatabaseObjects
 		public string IndexName { get; set; }
 		public string TableName { get; set; }
 		public List<string> ColumnNames { get; set; }
+		public List<string> IncludeColumnNames { get; set; }
 
 		public DatabaseSqlServerIndex()
 		{
@@ -20,6 +21,7 @@ namespace SqlSchemaComparer.DatabaseObjects
 			IndexName = string.Empty;
 			TableName = string.Empty;
 			ColumnNames = new List<string>();
+			IncludeColumnNames = new List<string>();
 		}
 
 		public static List<DatabaseSqlServerIndex> GetFromDataTable(DataTable dataTable)
@@ -31,6 +33,7 @@ namespace SqlSchemaComparer.DatabaseObjects
 				string indexName = (string)dataRow["IndexName"];
 				string tableName = (string)dataRow["tablename"];
 				string columnName = (string)dataRow["ColumnName"];
+				bool includeColumn = (bool)dataRow["is_included_column"];
 
 				DatabaseSqlServerIndex index = ret.FirstOrDefault(i => i.SchemaName.Equals(schemaName, StringComparison.CurrentCultureIgnoreCase) && i.IndexName.Equals(indexName, StringComparison.CurrentCultureIgnoreCase));
 				if (index == null)
@@ -39,7 +42,14 @@ namespace SqlSchemaComparer.DatabaseObjects
 					ret.Add(index);
 				}
 
-				index.ColumnNames.Add(columnName);
+				if (includeColumn)
+				{
+					index.IncludeColumnNames.Add(columnName);
+				}
+				else
+				{
+					index.ColumnNames.Add(columnName);
+				}
 			}
 
 			return ret;
@@ -50,8 +60,9 @@ namespace SqlSchemaComparer.DatabaseObjects
 			get
 			{
 				return string.Format(
-					"CREATE INDEX {1} ON {0}.{2}({3})",
-					SchemaName, IndexName, TableName, string.Join(",", ColumnNames)
+					"CREATE INDEX {1} ON {0}.{2}({3}){4}",
+					SchemaName, IndexName, TableName, string.Join(",", ColumnNames),
+					IncludeColumnNames.Count == 0 ? "" : " INCLUDE (" + string.Join(",", IncludeColumnNames)
 					);
 			}
 		}

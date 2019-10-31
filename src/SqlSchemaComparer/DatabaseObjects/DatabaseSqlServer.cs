@@ -62,7 +62,7 @@ namespace SqlSchemaComparer.DatabaseObjects
             "WHERE       fk.type = 'F' " +
             "ORDER BY    p.name, c.name ";
         private const string SQL_GET_INDEXES =
-            "select     distinct s.name as SchemaName, i.name as IndexName, c.name as ColumnName, o.name as tablename " +
+			"select     distinct s.name as SchemaName, i.name as IndexName, c.name as ColumnName, o.name as tablename, ic.is_included_column " +
             "from       sys.indexes i " +
 			"inner join sys.index_columns ic on ic.object_id = i.object_id and ic.index_id = i.index_id " +
             "inner join sys.objects o on o.object_id = i.object_id and o.is_ms_shipped = 0 " +
