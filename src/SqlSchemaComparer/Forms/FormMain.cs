@@ -171,9 +171,12 @@ namespace SqlSchemaComparer.Forms
 			Object2.HeaderText = dbSelected2.Name;
 			Application.DoEvents();
 
+			SavedValue sortByDependancies = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "sortondependancies");
+			bool sortByDependancies1 = sortByDependancies != null && sortByDependancies.Value == "1";
+
 			DatabaseSource database1 = new DatabaseSource(dbSelected1);
 			database1.DatabaseObjectScanProgress += new DatabaseSource.DatabaseObjectScanProgressHandler(Database1ScanProgressMade);
-			database1.GetDatabaseObjects(true);
+			database1.GetDatabaseObjects(sortByDependancies1);
 
 			DatabaseSource database2 = new DatabaseSource(dbSelected2);
 			database2.DatabaseObjectScanProgress += new DatabaseSource.DatabaseObjectScanProgressHandler(Database2ScanProgressMade);

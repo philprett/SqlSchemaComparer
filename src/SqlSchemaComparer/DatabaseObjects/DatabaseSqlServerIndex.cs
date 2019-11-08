@@ -62,7 +62,7 @@ namespace SqlSchemaComparer.DatabaseObjects
 				return string.Format(
 					"CREATE INDEX {1} ON {0}.{2}({3}){4}",
 					SchemaName, IndexName, TableName, string.Join(",", ColumnNames),
-					IncludeColumnNames.Count == 0 ? "" : " INCLUDE (" + string.Join(",", IncludeColumnNames)
+					IncludeColumnNames.Count == 0 ? "" : " INCLUDE (" + string.Join(",", IncludeColumnNames) + ")"
 					);
 			}
 		}

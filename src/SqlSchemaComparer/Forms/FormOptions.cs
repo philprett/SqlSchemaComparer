@@ -24,14 +24,16 @@ namespace SqlSchemaComparer.Forms
             SavedValue ignoreGo = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "ignorego");
             SavedValue caseSensitive = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "casesensitive");
             SavedValue showIdentical = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "showidentical");
-            SavedValue includeDropActions = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "includedropactions");
+			SavedValue includeDropActions = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "includedropactions");
+			SavedValue sortOnDependancies = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "sortondependancies");
 
-            chkIgnoreComments.Checked = ignoreComments.Value == "1";
+			chkIgnoreComments.Checked = ignoreComments.Value == "1";
             chkIgnoreGo.Checked = ignoreGo.Value == "1";
             chkCaseSensitive.Checked = caseSensitive.Value == "1";
             chkShowIdenticalObjects.Checked = showIdentical.Value == "1";
             chkIncludeDropActions.Checked = includeDropActions.Value == "1";
-        }
+			chkSortOnDependancies.Checked = sortOnDependancies.Value == "1";
+		}
 
         private void butSave_Click(object sender, EventArgs e)
         {
@@ -40,14 +42,16 @@ namespace SqlSchemaComparer.Forms
             SavedValue caseSensitive = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "casesensitive");
             SavedValue showIdentical = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "showidentical");
             SavedValue includeDropActions = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "includedropactions");
+			SavedValue sortOnDependancies = AppDataContext.DB.SavedValues.FirstOrDefault(v => v.Name == "sortondependancies");
 
-            ignoreComments.Value = chkIgnoreComments.Checked ? "1" : "0";
+			ignoreComments.Value = chkIgnoreComments.Checked ? "1" : "0";
             ignoreGo.Value = chkIgnoreGo.Checked ? "1" : "0";
             caseSensitive.Value = chkCaseSensitive.Checked ? "1" : "0";
             showIdentical.Value = chkShowIdenticalObjects.Checked ? "1" : "0";
-            includeDropActions.Value = chkIncludeDropActions.Checked ? "1" : "0";
+			includeDropActions.Value = chkIncludeDropActions.Checked ? "1" : "0";
+			sortOnDependancies.Value = chkSortOnDependancies.Checked ? "1" : "0";
 
-            AppDataContext.DB.SaveChanges();
+			AppDataContext.DB.SaveChanges();
 
             DialogResult = DialogResult.OK;
         }

@@ -129,6 +129,10 @@ namespace SqlSchemaComparer.AppData
 			{
 				SavedValues.Add(new SavedValue() { Id = Utils.GetRandomLong(), Name = "includedropactions", Value = "1" });
 			}
+			if (SavedValues.FirstOrDefault(v => v.Name == "sortondependancies") == null)
+			{
+				SavedValues.Add(new SavedValue() { Id = Utils.GetRandomLong(), Name = "sortondependancies", Value = "1" });
+			}
 			SaveChanges();
 		}
 	}
