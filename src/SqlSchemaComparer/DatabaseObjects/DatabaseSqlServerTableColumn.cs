@@ -48,7 +48,7 @@ namespace SqlSchemaComparer.DatabaseObjects
 
 		public string GetDefinitionType()
 		{
-			if (ColumnType == "real" || ColumnType == "money" || ColumnType == "decimal" || ColumnType == "numeric" || ColumnType == "smallmoney")
+			if (ColumnType == "decimal" || ColumnType == "numeric")
 			{
 				return string.Format("{0}({1},{2})", ColumnType, Precision, Scale);
 			}
